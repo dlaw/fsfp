@@ -1,0 +1,10 @@
+[package]
+name = "fp"
+version = "0.2.0"
+edition = "2021"
+authors = ["David Lawrence <dlaw@dlaw.me>"]
+license = "MIT"
+repository = "https://github.com/dlaw/fp/"
+description = "Fast & safe fixed-point arithmetic via compile-time checks"
+categories = ["embedded", "no-std"]
+keywords = ["embedded", "fixed", "math", "numerics"]
