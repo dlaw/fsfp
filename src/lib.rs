@@ -23,9 +23,9 @@
 //! the result of multiplying a 10-bit number (shifted by 2) and a 12-bit number (shifted by 3)
 //! is a 22-bit number (shifted by 5).
 //!
-//! The trait `Fp` represents any fixed-point number stored as an
-//! integer, and the structs `FpXxx<const BITS: u32, const SHIFT: i32>` implement the
-//! `Fp` trait for each integer type `Xxx`.  Arithmetic operations on the fixed-point
+//! The trait `Num` represents any fixed-point number stored as an
+//! integer, and the structs `NumXxx<const BITS: u32, const SHIFT: i32>` implement the
+//! `Num` trait for each integer type `Xxx`.  Arithmetic operations on the fixed-point
 //! types are guaranteed to provide correctness and overflow safety with zero runtime
 //! overhead.
 //!
@@ -46,14 +46,14 @@ pub enum RangeError {
 /// A fixed-point number, stored as type `Raw`,
 /// where only the `BITS` least-significant bits may be nonzero.
 /// The raw value is divided by `2.pow(SHIFT)` to obtain the logical value.
-pub trait Fp: Clone + Copy + Eq + Ord + PartialEq + PartialOrd + Sized {
+pub trait Num: Clone + Copy + Eq + Ord + PartialEq + PartialOrd + Sized {
     /// The underlying ("raw") representation of this fixed-point number.
     /// Typically this is a primitive integer type, e.g. `i64`.
-    type Raw: Fp + Shl<u32, Output=Self::Raw> + Shr<u32, Output=Self::Raw>;
+    type Raw: Num<Raw = Self::Raw> + Shl<u32, Output = Self::Raw> + Shr<u32, Output = Self::Raw>;
     /// The type that this fixed point number will become after `BITS` and/or `SHIFT`
-    /// are changed by an operation.  Typically this is one of the `Fp*` structs, e.g.
-    /// `FpI64`.
-    type Output<const B: u32, const S: i32>: Fp<Raw = Self::Raw>;
+    /// are changed by an operation.  Typically this is one of the `Num*` structs, e.g.
+    /// `I64`.
+    type Output<const B: u32, const S: i32>: Num<Raw = Self::Raw>;
     /// `BITS` is the number of least-significant bits which are permitted to vary.
     /// The `Raw::BITS - BITS` high-order bits must be zero (for unsigned `Raw`) or the
     /// same as the high bit of the lower `BITS` bits (for signed `Raw`).
@@ -127,7 +127,7 @@ pub trait Fp: Clone + Copy + Eq + Ord + PartialEq + PartialOrd + Sized {
     /// Return the fixed-point number of type `Self` which has the same logical value as `val`.
     /// `F` and `Self` must have the same shift and signedness. `Self` must have at least as
     /// many bits as `F`.
-    fn from_fp<T: Fp, F: Fp<Raw = T>>(val: F) -> Self
+    fn from_fp<T: Num, F: Num<Raw = T>>(val: F) -> Self
     where
         Self::Raw: TryFrom<T>,
     {
@@ -139,7 +139,7 @@ pub trait Fp: Clone + Copy + Eq + Ord + PartialEq + PartialOrd + Sized {
     /// Return the fixed-point number of type `F` which has the same logical value as `self`.
     /// `F` and `Self` must have the same shift and signedness. `F` must have at least as
     /// many bits as `Self`.
-    fn into_fp<T: Fp, F: Fp<Raw = T>>(self) -> F
+    fn into_fp<T: Num, F: Num<Raw = T>>(self) -> F
     where
         T: TryFrom<Self::Raw>,
     {

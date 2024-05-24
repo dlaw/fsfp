@@ -1,6 +1,6 @@
 use core::ops::{Add, Neg, Sub};
 
-use crate::Fp;
+use crate::Num;
 
 /// Needed for const-generic support, because the standard
 /// ways to compute maximum of two values are not const.
@@ -48,7 +48,7 @@ macro_rules! fp_impl {
                     Self::Output::new_unchecked(
                         // use wrapping_sub to ensure we don't do overflow checks
                         // (overflow safety is guaranteed by the type system)
-                        self.raw().wrapping_sub(other.raw()) as <Self::Output as Fp>::Raw,
+                        self.raw().wrapping_sub(other.raw()) as <Self::Output as Num>::Raw,
                     )
                 }
             }
@@ -62,21 +62,21 @@ macro_rules! fp_impl {
             // signed values can overflow from MIN to -MIN = MAX + 1.
             type Output = $Iname<{ B + 1 }, S>;
             fn neg(self: $Name<B, S>) -> Self::Output {
-                unsafe { Self::Output::new_unchecked(-(self.raw() as <Self::Output as Fp>::Raw)) }
+                unsafe { Self::Output::new_unchecked(-(self.raw() as <Self::Output as Num>::Raw)) }
             }
         }
     };
 }
 
-fp_impl!(FpU8, FpI8);
-fp_impl!(FpI8, FpI8);
-fp_impl!(FpU16, FpI16);
-fp_impl!(FpI16, FpI16);
-fp_impl!(FpU32, FpI32);
-fp_impl!(FpI32, FpI32);
-fp_impl!(FpU64, FpI64);
-fp_impl!(FpI64, FpI64);
-fp_impl!(FpU128, FpI128);
-fp_impl!(FpI128, FpI128);
-fp_impl!(FpUsize, FpIsize);
-fp_impl!(FpIsize, FpIsize);
+fp_impl!(U8, I8);
+fp_impl!(I8, I8);
+fp_impl!(U16, I16);
+fp_impl!(I16, I16);
+fp_impl!(U32, I32);
+fp_impl!(I32, I32);
+fp_impl!(U64, I64);
+fp_impl!(I64, I64);
+fp_impl!(U128, I128);
+fp_impl!(I128, I128);
+fp_impl!(Usize, Isize);
+fp_impl!(Isize, Isize);

@@ -1,6 +1,6 @@
 use core::ops::{Div, Mul};
 
-use crate::Fp;
+use crate::Num;
 
 macro_rules! fp_impl {
     ($Name:ident, $T:ty) => {
@@ -67,18 +67,18 @@ macro_rules! fp_impl {
     };
 }
 
-fp_impl!(FpI8, i8);
-fp_impl!(FpU8, u8);
-fp_impl!(FpI16, i16);
-fp_impl!(FpU16, u16);
-fp_impl!(FpI32, i32);
-fp_impl!(FpU32, u32);
-fp_impl!(FpI64, i64);
-fp_impl!(FpU64, u64);
-fp_impl!(FpI128, i128);
-fp_impl!(FpU128, u128);
-fp_impl!(FpIsize, isize);
-fp_impl!(FpUsize, usize);
+fp_impl!(I8, i8);
+fp_impl!(U8, u8);
+fp_impl!(I16, i16);
+fp_impl!(U16, u16);
+fp_impl!(I32, i32);
+fp_impl!(U32, u32);
+fp_impl!(I64, i64);
+fp_impl!(U64, u64);
+fp_impl!(I128, i128);
+fp_impl!(U128, u128);
+fp_impl!(Isize, isize);
+fp_impl!(Usize, usize);
 
 macro_rules! fp_signed_unsigned_impl {
     ($Uname:ident, $Iname:ident) => {
@@ -91,7 +91,7 @@ macro_rules! fp_signed_unsigned_impl {
             type Output = $Iname<{ B0 + B1 }, { S0 + S1 }>;
             fn mul(self: $Iname<B0, S0>, other: $Uname<B1, S1>) -> Self::Output {
                 unsafe {
-                    Self::Output::new_unchecked(self.raw() * other.raw() as <Self::Output as Fp>::Raw)
+                    Self::Output::new_unchecked(self.raw() * other.raw() as <Self::Output as Num>::Raw)
                 }
             }
         }
@@ -104,7 +104,7 @@ macro_rules! fp_signed_unsigned_impl {
             type Output = $Iname<{ B0 + B1 }, { S0 + S1 }>;
             fn mul(self: $Uname<B0, S0>, other: $Iname<B1, S1>) -> Self::Output {
                 unsafe {
-                    Self::Output::new_unchecked(self.raw() as <Self::Output as Fp>::Raw * other.raw())
+                    Self::Output::new_unchecked(self.raw() as <Self::Output as Num>::Raw * other.raw())
                 }
             }
         }
@@ -116,7 +116,7 @@ macro_rules! fp_signed_unsigned_impl {
             type Output = $Iname<B0, { S0 - S1 }>;
             fn div(self: $Iname<B0, S0>, other: $Uname<B1, S1>) -> Self::Output {
                 unsafe {
-                    Self::Output::new_unchecked(self.raw() / other.raw() as <Self::Output as Fp>::Raw)
+                    Self::Output::new_unchecked(self.raw() / other.raw() as <Self::Output as Num>::Raw)
                 }
             }
         }
@@ -129,16 +129,16 @@ macro_rules! fp_signed_unsigned_impl {
             type Output = $Iname<{ B0 + 1 }, { S0 - S1 }>;
             fn div(self: $Uname<B0, S0>, other: $Iname<B1, S1>) -> Self::Output {
                 unsafe {
-                    Self::Output::new_unchecked(self.raw() as <Self::Output as Fp>::Raw / other.raw())
+                    Self::Output::new_unchecked(self.raw() as <Self::Output as Num>::Raw / other.raw())
                 }
             }
         }
     };
 }
 
-fp_signed_unsigned_impl!(FpU8, FpI8);
-fp_signed_unsigned_impl!(FpU16, FpI16);
-fp_signed_unsigned_impl!(FpU32, FpI32);
-fp_signed_unsigned_impl!(FpU64, FpI64);
-fp_signed_unsigned_impl!(FpU128, FpI128);
-fp_signed_unsigned_impl!(FpUsize, FpIsize);
+fp_signed_unsigned_impl!(U8, I8);
+fp_signed_unsigned_impl!(U16, I16);
+fp_signed_unsigned_impl!(U32, I32);
+fp_signed_unsigned_impl!(U64, I64);
+fp_signed_unsigned_impl!(U128, I128);
+fp_signed_unsigned_impl!(Usize, Isize);

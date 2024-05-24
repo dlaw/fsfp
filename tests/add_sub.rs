@@ -5,13 +5,13 @@ use fp::*;
 
 use core::ops::{Add, Neg, Sub};
 
-fn validate<A: Fp, B: Fp, C: Fp>()
+fn validate<A: Num, B: Num, C: Num>()
 where
     A: Add<A, Output = B> + Sub<A, Output = C> + Neg<Output = C>,
-    <A as Fp>::Raw: Add<<A as Fp>::Raw, Output = <B as Fp>::Raw>,
-    <A as Fp>::Raw: TryInto<<C as Fp>::Raw>,
-    <C as Fp>::Raw: Sub<<C as Fp>::Raw, Output = <C as Fp>::Raw>,
-    <C as Fp>::Raw: Neg<Output = <C as Fp>::Raw>,
+    <A as Num>::Raw: Add<<A as Num>::Raw, Output = <B as Num>::Raw>,
+    <A as Num>::Raw: TryInto<<C as Num>::Raw>,
+    <C as Num>::Raw: Sub<<C as Num>::Raw, Output = <C as Num>::Raw>,
+    <C as Num>::Raw: Neg<Output = <C as Num>::Raw>,
 {
     for a0 in [A::MIN, A::MAX] {
         for a1 in [A::MIN, A::MAX] {
@@ -33,8 +33,8 @@ where
 
 #[test]
 fn add_sub_limits() {
-    validate::<FpI8<7, -3>, FpI8<8, -3>, FpI8<8, -3>>();
-    validate::<FpI32<4, 0>, FpI32<5, 0>, FpI32<5, 0>>();
-    validate::<FpUsize<12, 0>, FpUsize<13, 0>, FpIsize<13, 0>>();
-    validate::<FpU128<127, 41>, FpU128<128, 41>, FpI128<128, 41>>();
+    validate::<I8<7, -3>, I8<8, -3>, I8<8, -3>>();
+    validate::<I32<4, 0>, I32<5, 0>, I32<5, 0>>();
+    validate::<Usize<12, 0>, Usize<13, 0>, Isize<13, 0>>();
+    validate::<U128<127, 41>, U128<128, 41>, I128<128, 41>>();
 }
