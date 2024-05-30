@@ -37,9 +37,12 @@ macro_rules! fp_impl {
 
         #[repr(transparent)]
         #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-        #[doc = concat!("`#[repr(transparent)]` struct containing `", stringify!($T), "`, interpreted as a fixed-point number.")]
+        /// [`#[repr(transparent)]`](https://doc.rust-lang.org/reference/type-layout.html#the-transparent-representation)
+        /// struct containing
+        #[doc = concat!("[`", stringify!($T), "`]")]
+        /// interpreted as a fixed-point number.
         ///
-        /// Implements the trait `Num` for fixed-point manipulation.
+        /// Implements the trait [`fp::Num`](Num) for fixed-point manipulation.
         pub struct $Name<const BITS: u32, const SHIFT: i32>($T);
 
         impl<const BITS: u32, const SHIFT: i32> Num for $Name<BITS, SHIFT> {

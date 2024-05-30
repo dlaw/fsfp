@@ -51,8 +51,7 @@ pub trait Num: Clone + Copy + Eq + Ord + PartialEq + PartialOrd + Sized {
     /// Typically this is a primitive integer type, e.g. `i64`.
     type Raw: Num<Raw = Self::Raw> + Shl<u32, Output = Self::Raw> + Shr<u32, Output = Self::Raw>;
     /// The type that this fixed point number will become after `BITS` and/or `SHIFT`
-    /// are changed by an operation.  Typically this is one of the `Num*` structs, e.g.
-    /// `I64`.
+    /// are changed by an operation.
     type Output<const B: u32, const S: i32>: Num<Raw = Self::Raw>;
     /// `BITS` is the number of least-significant bits which are permitted to vary.
     /// The `Raw::BITS - BITS` high-order bits must be zero (for unsigned `Raw`) or the
